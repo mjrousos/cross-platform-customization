@@ -1,19 +1,19 @@
-# How to Play the Guessing Game
+# Comment jouer au jeu de devinette
 
-1. Build the app from the repository root:
+1. Compilez l'application depuis la racine du dépôt :
 
-   ```bash
-   ilasm GuessingGame.il /exe /output:GuessingGame.exe
+   ```powershell
+   C:\Windows\Microsoft.NET\Framework\v4.0.30319\ilasm.exe /output:GuessingGame.exe GuessingGame.il
    ```
 
-2. Run the game:
+2. Lancez le jeu :
 
    ```bash
    mono GuessingGame.exe
    ```
 
-3. When prompted, enter a guess from 1 to 100.
-4. If your guess is too low or too high, the game will tell you and ask again.
-5. Keep guessing until the game tells you that you guessed the number.
+3. Lorsque le jeu vous y invite, saisissez un nombre entre 1 et 100.
+4. Si votre proposition est trop petite ou trop grande, le jeu vous l'indiquera et vous demandera de réessayer.
+5. Continuez jusqu'à ce que le jeu confirme que vous avez trouvé le bon nombre.
 
-If you enter something that is not a whole number, or a number outside the 1-100 range, the game will ask you to try again.
+Si vous saisissez autre chose qu'un nombre entier, ou un nombre en dehors de l'intervalle 1-100, le jeu vous demandera de recommencer.
