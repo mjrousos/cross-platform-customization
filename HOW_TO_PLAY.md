@@ -7,10 +7,12 @@
    ```
 
 2. Lancez le jeu :
+   - Sous Windows, exécutez `.\GuessingGame.exe`.
+   - Sous Linux ou macOS avec Mono, exécutez :
 
-   ```bash
-   mono GuessingGame.exe
-   ```
+     ```bash
+     mono GuessingGame.exe
+     ```
 
 3. Lorsque le jeu vous y invite, saisissez un nombre entre 1 et 100.
 4. Si votre proposition est trop petite ou trop grande, le jeu vous l'indiquera et vous demandera de réessayer.
