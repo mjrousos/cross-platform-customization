@@ -52,12 +52,13 @@
   <main class="container">
     <h1>I'm thinking of a number from 1 to 100.</h1>
     <p>Enter your guess to find the secret number.</p>
+    <label for="guessInput">Your guess</label>
     <div class="controls">
       <input id="guessInput" type="number" min="1" max="100" placeholder="Enter your guess" autocomplete="off">
       <button id="guessButton" type="button">Guess</button>
-      <button id="newGameButton" type="button" hidden>New game</button>
+      <button id="newGameButton" type="button">New game</button>
     </div>
-    <p id="message" aria-live="polite"></p>
+    <p id="message" role="status" aria-live="polite"></p>
     <ul id="history"></ul>
   </main>
   <script>
@@ -66,6 +67,7 @@
     const newGameButton = document.getElementById('newGameButton');
     const message = document.getElementById('message');
     const history = document.getElementById('history');
+    const INTEGER_PATTERN = /^\d+$/;
 
     let target = 0;
     let attempts = 0;
@@ -85,17 +87,24 @@
       message.textContent = text;
     }
 
-    function startNewGame() {
+    function setNewGameEnabled(enabled) {
+      newGameButton.disabled = !enabled;
+      newGameButton.setAttribute('aria-disabled', String(!enabled));
+    }
+
+    function startNewGame(shouldFocusInput) {
       target = randomTarget();
       attempts = 0;
       gameOver = false;
       history.innerHTML = '';
       guessInput.disabled = false;
       guessButton.disabled = false;
-      newGameButton.hidden = true;
+      setNewGameEnabled(false);
       setMessage('');
       guessInput.value = '';
-      guessInput.focus();
+      if (shouldFocusInput) {
+        guessInput.focus();
+      }
     }
 
     function submitGuess() {
@@ -104,7 +113,7 @@
       }
 
       const raw = guessInput.value.trim();
-      if (!/^-?\d+$/.test(raw)) {
+      if (!INTEGER_PATTERN.test(raw)) {
         setMessage('Please enter a whole number.');
         return;
       }
@@ -124,24 +133,26 @@
         setMessage('Too high. Try again.');
         addHistoryLine(guess, 'Too high');
       } else {
-        setMessage('Correct! You guessed the number in ' + attempts + ' tries.');
+        setMessage(`Correct! You guessed the number in ${attempts} ${attempts === 1 ? 'try' : 'tries'}.`);
         addHistoryLine(guess, 'Correct');
         gameOver = true;
         guessInput.disabled = true;
         guessButton.disabled = true;
-        newGameButton.hidden = false;
+        setNewGameEnabled(true);
       }
     }
 
     guessButton.addEventListener('click', submitGuess);
-    newGameButton.addEventListener('click', startNewGame);
+    newGameButton.addEventListener('click', function () {
+      startNewGame(true);
+    });
     guessInput.addEventListener('keydown', function (event) {
       if (event.key === 'Enter') {
         submitGuess();
       }
     });
 
-    startNewGame();
+    startNewGame(false);
   </script>
 </body>
 </html>

@@ -25,6 +25,6 @@ Si vous saisissez autre chose qu'un nombre entier, ou un nombre en dehors de l'i
 Vous pouvez aussi jouer dans une interface web:
 
 1. Ouvrez `index.html` dans votre navigateur.
-2. Entrez un nombre entre 1 et 100 puis cliquez sur **Guess**.
+2. Entrez un nombre entre 1 et 100 puis cliquez sur le bouton pour deviner.
 3. L'interface affiche si votre proposition est trop petite, trop grande, ou correcte.
-4. Utilisez **New game** pour recommencer une partie.
+4. Utilisez le bouton de nouvelle partie pour recommencer une partie.
