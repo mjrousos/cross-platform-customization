@@ -1,0 +1,1 @@
+This repository will be used to experiment with GitHub Copilot customizations.
