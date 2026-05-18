@@ -19,3 +19,12 @@
 5. Continuez jusqu'à ce que le jeu confirme que vous avez trouvé le bon nombre.
 
 Si vous saisissez autre chose qu'un nombre entier, ou un nombre en dehors de l'intervalle 1-100, le jeu vous demandera de recommencer.
+
+## Version Web (HTML/JavaScript)
+
+Vous pouvez aussi jouer dans une interface web:
+
+1. Ouvrez `index.html` dans votre navigateur.
+2. Entrez un nombre entre 1 et 100 puis cliquez sur **Guess**.
+3. L'interface affiche si votre proposition est trop petite, trop grande, ou correcte.
+4. Utilisez **New game** pour recommencer une partie.
