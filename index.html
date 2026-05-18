@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Guess the Number</title>
+  <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background: #f0f4f8;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #2d3748;
+    }
+
+    .card {
+      background: #ffffff;
+      border-radius: 16px;
+      box-shadow: 0 4px 24px rgba(0, 0, 0, 0.10);
+      padding: 40px 48px;
+      width: 100%;
+      max-width: 440px;
+      text-align: center;
+    }
+
+    h1 {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: #1a202c;
+      margin-bottom: 6px;
+    }
+
+    .subtitle {
+      font-size: 0.95rem;
+      color: #718096;
+      margin-bottom: 28px;
+    }
+
+    .range-badge {
+      display: inline-block;
+      background: #ebf4ff;
+      color: #3182ce;
+      border-radius: 20px;
+      padding: 4px 14px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      margin-bottom: 28px;
+    }
+
+    .attempts-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      margin-bottom: 24px;
+    }
+
+    .attempts-label {
+      font-size: 0.9rem;
+      color: #718096;
+    }
+
+    .attempts-count {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #3182ce;
+      min-width: 24px;
+    }
+
+    .input-row {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    #guess-input {
+      flex: 1;
+      border: 2px solid #e2e8f0;
+      border-radius: 10px;
+      padding: 12px 16px;
+      font-size: 1.2rem;
+      font-weight: 600;
+      text-align: center;
+      color: #2d3748;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    #guess-input:focus {
+      border-color: #3182ce;
+    }
+
+    #guess-input:disabled {
+      background: #f7fafc;
+      color: #a0aec0;
+    }
+
+    #guess-btn {
+      background: #3182ce;
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      padding: 12px 22px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.1s;
+      white-space: nowrap;
+    }
+
+    #guess-btn:hover:not(:disabled) {
+      background: #2b6cb0;
+    }
+
+    #guess-btn:active:not(:disabled) {
+      transform: scale(0.97);
+    }
+
+    #guess-btn:disabled {
+      background: #a0aec0;
+      cursor: default;
+    }
+
+    .message {
+      min-height: 52px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 10px;
+      padding: 12px 16px;
+      font-size: 1rem;
+      font-weight: 600;
+      margin-bottom: 24px;
+      transition: background 0.3s, color 0.3s;
+    }
+
+    .message.info {
+      background: #ebf8ff;
+      color: #2b6cb0;
+    }
+
+    .message.too-low {
+      background: #fff3cd;
+      color: #856404;
+    }
+
+    .message.too-high {
+      background: #fde8e8;
+      color: #c53030;
+    }
+
+    .message.correct {
+      background: #c6f6d5;
+      color: #276749;
+    }
+
+    .message.error {
+      background: #fff3cd;
+      color: #856404;
+    }
+
+    .history-section {
+      text-align: left;
+      margin-bottom: 24px;
+    }
+
+    .history-label {
+      font-size: 0.8rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: #a0aec0;
+      margin-bottom: 8px;
+    }
+
+    .history-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .history-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      border-radius: 20px;
+      padding: 3px 10px;
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+
+    .history-chip.low {
+      background: #fefcbf;
+      color: #744210;
+    }
+
+    .history-chip.high {
+      background: #fed7d7;
+      color: #9b2c2c;
+    }
+
+    .history-chip.win {
+      background: #c6f6d5;
+      color: #276749;
+    }
+
+    #new-game-btn {
+      width: 100%;
+      background: #edf2f7;
+      color: #4a5568;
+      border: none;
+      border-radius: 10px;
+      padding: 12px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    #new-game-btn:hover {
+      background: #e2e8f0;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>Guess the Number</h1>
+    <p class="subtitle">I'm thinking of a number. Can you guess it?</p>
+    <div class="range-badge">1 – 100</div>
+
+    <div class="attempts-row">
+      <span class="attempts-label">Attempts:</span>
+      <span class="attempts-count" id="attempts">0</span>
+    </div>
+
+    <div class="input-row">
+      <input
+        id="guess-input"
+        type="number"
+        min="1"
+        max="100"
+        placeholder="?"
+        autocomplete="off"
+      />
+      <button id="guess-btn">Guess</button>
+    </div>
+
+    <div class="message info" id="message">Enter a number between 1 and 100.</div>
+
+    <div class="history-section" id="history-section" style="display:none">
+      <div class="history-label">Previous guesses</div>
+      <div class="history-list" id="history-list"></div>
+    </div>
+
+    <button id="new-game-btn">New Game</button>
+  </div>
+
+  <script>
+    (function () {
+      var target;
+      var attempts;
+      var gameOver;
+
+      var input = document.getElementById('guess-input');
+      var guessBtn = document.getElementById('guess-btn');
+      var messageEl = document.getElementById('message');
+      var attemptsEl = document.getElementById('attempts');
+      var historySection = document.getElementById('history-section');
+      var historyList = document.getElementById('history-list');
+      var newGameBtn = document.getElementById('new-game-btn');
+
+      function randomInt(min, max) {
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+      }
+
+      function startGame() {
+        target = randomInt(1, 100);
+        attempts = 0;
+        gameOver = false;
+        attemptsEl.textContent = '0';
+        historyList.innerHTML = '';
+        historySection.style.display = 'none';
+        setMessage('Enter a number between 1 and 100.', 'info');
+        input.value = '';
+        input.disabled = false;
+        guessBtn.disabled = false;
+        input.focus();
+      }
+
+      function setMessage(text, type) {
+        messageEl.textContent = text;
+        messageEl.className = 'message ' + type;
+      }
+
+      function addHistoryChip(num, type) {
+        var chip = document.createElement('span');
+        chip.className = 'history-chip ' + type;
+        var arrow = type === 'low' ? '▲' : type === 'high' ? '▼' : '✓';
+        chip.textContent = arrow + ' ' + num;
+        historyList.appendChild(chip);
+        historySection.style.display = 'block';
+      }
+
+      function submitGuess() {
+        if (gameOver) return;
+
+        var raw = input.value.trim();
+
+        if (raw === '' || raw.indexOf('.') !== -1) {
+          setMessage('Please enter a whole number.', 'error');
+          input.select();
+          return;
+        }
+
+        var guess = parseInt(raw, 10);
+
+        if (isNaN(guess)) {
+          setMessage('Please enter a whole number.', 'error');
+          input.select();
+          return;
+        }
+
+        if (guess < 1 || guess > 100) {
+          setMessage('Please enter a number from 1 to 100.', 'error');
+          input.select();
+          return;
+        }
+
+        attempts++;
+        attemptsEl.textContent = attempts;
+        input.value = '';
+        input.focus();
+
+        if (guess < target) {
+          setMessage('Too low. Try again!', 'too-low');
+          addHistoryChip(guess, 'low');
+        } else if (guess > target) {
+          setMessage('Too high. Try again!', 'too-high');
+          addHistoryChip(guess, 'high');
+        } else {
+          var plural = attempts === 1 ? 'attempt' : 'attempts';
+          setMessage('🎉 Correct! You guessed ' + target + ' in ' + attempts + ' ' + plural + '!', 'correct');
+          addHistoryChip(guess, 'win');
+          input.disabled = true;
+          guessBtn.disabled = true;
+          gameOver = true;
+        }
+      }
+
+      guessBtn.addEventListener('click', submitGuess);
+
+      input.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter') submitGuess();
+      });
+
+      newGameBtn.addEventListener('click', startGame);
+
+      startGame();
+    })();
+  </script>
+</body>
+</html>
